@@ -1,0 +1,38 @@
+.container {
+    background-color: lightgray;
+}
+#header {
+    background-color: #215451;
+}
+
+#headerCourse {
+    padding-top: 3%;
+    padding-bottom: 3%;
+    padding-left: 3%;
+    color: black;
+}
+
+//Come back to select course -- its acting weird
+
+.play {
+    padding-top: 2%;
+}
+
+#firstTable tr, #secondTable tr {
+    border-color: black;
+    background-color: lightgray;
+}
+
+#firstTable th, #secondTable th{
+    background-color: white;
+}
+
+#firstTable h5 {
+    font-size: 12px;
+    margin: 3% 0;
+}
+
+footer {
+    text-align: center;
+
+}
