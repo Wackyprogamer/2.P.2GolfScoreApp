@@ -12,16 +12,18 @@
 <body>
 
     <div class="container">
-        <div class="row">
+        <div class="row" style="background-color: green;">
             <!--Green Banner / Header-->
-            <div class="col-lg-12" id="header"></div> 
+            <div class="col-lg-12" id="header">
+                <h1 id="headerCourse">Golf Score App</h1>
+            </div> 
         </div>
         <!--Container holding golf course options -->
         <div class="row">
             <div class="col-lg-12">
                 <div id="options-container">
-                    <div class="form-group">
-                        <label for="course-select">Select Course</label>
+                    <div class="form-group col-lg-6">
+                        <label for="course-select">Select A Course!</label>
                         <select class="form-control" id="course-select"></select>
                     </div>
                 </div>
@@ -29,17 +31,160 @@
         </div>
         <!--div container holding the scorecard -- holding the two tables of holes-->
         <div class="row" id="scorecard-container">
-            <h1>Lets Play Some Golf!!
+            <h1>Lets Play Some Golf!!</h1>
             <!--Scorecard div itself-->
             <div class="col-lg-12" id="scorecard">
                 <!--Div containing the first 9 holes & Player Names-->
-                <div class="table-responsive">
-                    <table class="table table-bordered">
+                <div class="table-responsive" id="firstTable">
+                    <table class="table table-bordered" style="border-color: black;">
+                        <h5 id="playerID">Current Player: </h5>
+
+                        <h5 id="selectedCourse">Current Selected Course: </h5>
+                        <tr>
+                            <th>Hole</th>
+                            <th>01</th>
+                            <th>02</th>
+                            <th>03</th>
+                            <th>04</th>
+                            <th>05</th>
+                            <th>06</th>
+                            <th>07</th>
+                            <th>08</th>
+                            <th>09</th>
+                            <th>Out</th>
+                        </tr>
+
+                        <tr>
+                            <th>Yardage</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        <tr>
+                            <th>Par</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                            
+                        <tr>
+                            <th>Handicap</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        <tr>
+                            <th>Luigi</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
                     </table>
                 </div>
                 <!--Second Div containing the next holes up to 18 & Player Names-->
-                <div class="table-responsive">
-                    <table class="table table-bordered">
+                <div class="table-responsive" id="secondTable">
+                    <table class="table table-bordered" style="border-color: black;">
+                        <tr>
+                            <th>Hole</th>
+                            <th>10</th>
+                            <th>11</th>
+                            <th>12</th>
+                            <th>13</th>
+                            <th>14</th>
+                            <th>15</th>
+                            <th>16</th>
+                            <th>17</th>
+                            <th>18</th>
+                            <th>Out</th>
+                        </tr>
+
+                        <tr>
+                            <th>Yardage</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        <tr>
+                            <th>Par</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        <tr>
+                            <th>Handicap</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
+                        <tr>
+                            <th>Luigi</th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+
                     </table>
                 </div>
             </div>
