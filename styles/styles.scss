@@ -12,7 +12,11 @@
     color: black;
 }
 
-//Come back to select course -- its acting weird
+label {
+    font-size: 25px;
+    padding: 2% 0 2% 45%;
+    font-weight: bold;
+}
 
 .play {
     padding-top: 2%;
@@ -36,3 +40,4 @@ footer {
     text-align: center;
 
 }
+
