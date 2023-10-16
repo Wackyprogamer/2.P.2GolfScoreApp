@@ -37,13 +37,14 @@
             <h1 class="play">Lets Play Some Golf!!</h1>
             <!--Scorecard div itself-->
             <div class="col-lg-12 col-md-12 col-sm-12" id="scorecard">
+                <div class="row" id="userSection">
+                    <h5 id="playerID" class="col-lg-2 col-md-2 col-sm-2" >Add Player: </h5>
+                    <input id="inputPlayer" class="col-lg-2 col-md-2 col-sm-2" type="text" placeholder="Enter Player Name">
+                    <button class="col-lg-2 col-md-2 col-sm-2" type="button" id="buttonPlayer">Click Me To Add Player!</button>
+                </div>
                 <!--Div containing the first 9 holes & Player Names-->
                 <div class="table-responsive" id="firstTable">
-                    <div class="row" id="userSection">
-                        <h5 id="playerID" class="col-lg-1 col-md-1 col-sm-1" >Add Player: </h5>
-                        <input id="inputPlayer" class="col-lg-2 col-md-2 col-sm-2" type="text" placeholder="Enter Player Name">
-                        <button class="col-lg-2 col-md-2 col-sm-2" type="button" id="buttonPlayer">Click Me To Add Player!</button>
-                    </div>
+                    
                     <table class="table table-bordered" id="tableData1">
                         <h5 id="selectedCourse">Current Selected Course: </h5>
                         <tbody id="tableData1Body">
