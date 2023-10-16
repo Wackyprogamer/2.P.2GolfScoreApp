@@ -15,12 +15,19 @@
 
 label {
   font-size: 25px;
-  padding: 2% 0 2% 45%;
+  padding: 1% 0;
   font-weight: bold;
+}
+
+#course-select {
+  margin-left: auto;
+  margin-right: auto;
+  width: 85%;
 }
 
 .play {
   padding-top: 2%;
+  text-align: center;
 }
 
 #userSection {
