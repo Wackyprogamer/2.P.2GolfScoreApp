@@ -3,14 +3,14 @@
 // url.
 
 
-function getAvailableGolfCourses() {
-    return fetch(
-      "https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/courses.json",
-    { mode: "no-cors" }
-    ).then(function (response) {
-      return response.json();
-    });
-  }
+//function getAvailableGolfCourses() {
+    //return fetch(
+      //"https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/courses.json",
+    //{ mode: "no-cors" }
+    //).then(function (response) {
+      //return response.json();
+    //});
+  //}
 
 //then using this function to grab golf course's details
 
@@ -53,13 +53,13 @@ function getAvailableGolfCourses() {
 
     let newTH = document.createElement('th'); // create header cell
 
-    newTH.id = "player-name"; //set id of header cell to player-name
+    newTH.id = "player-" + player ; //set id of header cell to player-name
 
     newTH.textContent = player; // set text content of table header cell to input
 
     document.getElementById('tableData1Body').appendChild(newTR).appendChild(newTH); // append new tr with child of th to tablebody on document
 
-    document.getElementById('tableData2Body').appendChild(newTR).appendChild(newTH); // same thing just second tableBody
+    //document.getElementById('tableData2Body').appendChild(newTR).appendChild(newTH); // same thing just second tableBody
     
     //before I added the second one -- will append to the first table -- now only appends to second table
   }
