@@ -22,6 +22,21 @@ label {
     padding-top: 2%;
 }
 
+#userSection {
+    width: 100%;
+}
+
+#inputPlayer {
+    height: 10%;
+    margin: 2.5% 1% 0 0;
+}
+
+#buttonPlayer {
+    height: 10%;
+    margin: 2.4% 1% 0 0;
+}
+
+
 #firstTable tr, #secondTable tr {
     border-color: black;
     background-color: lightgray;
@@ -40,4 +55,3 @@ footer {
     text-align: center;
 
 }
-
