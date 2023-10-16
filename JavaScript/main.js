@@ -42,26 +42,26 @@ function getAvailableGolfCourses() {
 
   document.getElementById("buttonPlayer").addEventListener('click', playerAdd);
 
-
   function playerAdd () {
     
 
-    let player = document.getElementById('inputPlayer').value;
+    let player = document.getElementById('inputPlayer').value; // Grab Player Name Input
 
-    let newTR = document.createElement('tr');
+    let newTR = document.createElement('tr'); // create table row element
 
-    newTR.id = player;
+    newTR.id = player; // set tablerow ID to equal player name
 
-    newTR.style = "border-color: black; background-color: lightgray";
+    let newTH = document.createElement('th'); // create header cell
 
-    let newTH = document.createElement('th');
+    newTH.id = "player-name"; //set id of header cell to player-name
 
-    newTH.id = "player-name";
+    newTH.textContent = player; // set text content of table header cell to input
 
-    newTH.textContent = player;
+    document.getElementById('tableData1Body').appendChild(newTR).appendChild(newTH); // append new tr with child of th to tablebody on document
 
-    document.getElementById('tableData1Body').appendChild(newTR).appendChild(newTH);
+    document.getElementById('tableData2Body').appendChild(newTR).appendChild(newTH); // same thing just second tableBody
     
+    //before I added the second one -- will append to the first table -- now only appends to second table
   }
 
   
