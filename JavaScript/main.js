@@ -59,7 +59,7 @@
 
     document.getElementById('tableData1Body').appendChild(newTR).appendChild(newTH); // append new tr with child of th to tablebody on document
 
-    //document.getElementById('tableData2Body').appendChild(newTR).appendChild(newTH); // same thing just second tableBody
+    document.getElementById('tableData2Body').appendChild(newTR).appendChild(newTH); // same thing just second tableBody
     
     //before I added the second one -- will append to the first table -- now only appends to second table
   }
