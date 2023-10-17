@@ -1,67 +1,184 @@
-// function created to get data from a remote source and display
-//it on the app -- function below gets all the courses ' name, id
-// url.
+// app state
+let players = {};
+let golfCourse;
+// Stuff about Player Data
+function guidGenerator() {
+  var S4 = function() {
+     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+  };
+  return 'a' + (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+}
+function getEmptyGolfScores() {
+  return new Array(18).fill(0);
+}
+
+class Player {
+  constructor(name, id = getNextId(), scores = getEmptyGolfScores()) {
+    this.name = name;
+    this.id = id;
+    this.scores = scores;
+  }
+}
+
+function createNewPlayer(name) {
+  const newPlayerId = guidGenerator();
+  const newPlayer = new Player(name, newPlayerId);
+
+  players[newPlayerId] = newPlayer;
+}
+
+// Fetching Stuff from the Internet/REST API
+function getAvailableGolfCourses() {
+  return fetch(
+    "https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/courses.json",
+  ).then(function (response) {
+    return response.json();
+  });
+}
+
+function getGolfCourseDetails(golfCourseId) {
+  return fetch(
+    `https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/course${golfCourseId}.json`
+  ).then(function (response) {
+    return response.json();
+  });
+}
+
+// Render Golf Card
 
 
-//function getAvailableGolfCourses() {
-    //return fetch(
-      //"https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/courses.json",
-    //{ mode: "no-cors" }
-    //).then(function (response) {
-      //return response.json();
-    //});
-  //}
+async function renderGolfScoreCards(golfCourseId) {
+  // render the first table
+  const golfCourseData = await getGolfCourseDetails(golfCourseId);
+  // render the second table
+  renderTable(1, golfCourseData);
+  renderTable(2, golfCourseData);
+}
 
-//then using this function to grab golf course's details
+function renderTable(whichTable, golfCourseData) {
+  const tBody = document.querySelector(`#tableData${whichTable}Body`);
+  tBody.innerHTML = '';
+  tBody.innerHTML += getTopPieceHtml();
+  tBody.innerHTML += getPlayersHtml();
 
-//function getGolfCourseDetails(golfCourseId) {
-    //return fetch(
-     // `https://exquisite-pastelito-9d4dd1.netlify.app/golfapi/course${golfCourseId}.json`,
-      //{ mode: "no-cors" }
-    //).then(function (response) {
-      //return response.json();
-    //});
- // }
+  function getTopPieceHtml() {
+    function getDataRow(title, key) {
+      let html  = ''
+      let total = 0;
 
-  // golf course select box so the user can choose what golf course
-  //to play on. Is created via javaScript by looping over the golf
-  //courses and creating an html string with the <option>s.
+      html += '<tr>';
+      html += `<th>${title}</th>`
 
- // let courseOptionsHtml = '';
+      for(let i  = 0;  i < 9; i++) {
+        const holesIndex = whichTable === 1 ? i : i + 9;
+        const cellValue = golfCourseData.holes[holesIndex].teeBoxes[0]?.[key];
+        
+        total += cellValue;
+        
+        html += `<th>${cellValue}</th>`
+        
+      }
 
- // courses.forEach((course) => {
-   // courseOptionsHtml += `<option value="${course.id}">${course.name}</option>`;
-  //});
+      html += `<th>${total}</th>`
+      html += '</tr>';
 
-  //document.getElementById('Course-select').innerHTML = courseOptionsHtml;
+      return html;
+    }
+
+    function getHolesRow() {
+      let html  = ''
+      let lastCell = whichTable === 1 ? 'Out' : 'In';
+      
+      html += '<tr>';
+      html += `<th>Holes</th>`
+
+      for(let i  = 0; i < 9; i++) {
+        const displayHole = whichTable === 1 ? `0${i + 1}`: i + 10 ;
+        html += `<th>${displayHole}</th>`;
+      }
+      
+
+      html += `<th>${lastCell}</th>`
+      html += '</tr>';
+
+      return html;
+    }
 
 
+    let innerHTML = '';
+    innerHTML += getHolesRow();
+    innerHTML += getDataRow('Yardage', 'yards');
+    innerHTML += getDataRow('Par', 'par');
+    innerHTML += getDataRow('Handicap', 'hcp');
 
-  //This function to grab user input to add player and input it to the
-  //score card -- up to 4 players
-
-  document.getElementById("buttonPlayer").addEventListener('click', playerAdd);
-
-  function playerAdd () {
-    
-
-    let player = document.getElementById('inputPlayer').value; // Grab Player Name Input
-
-    let newTR = document.createElement('tr'); // create table row element
-
-    newTR.id = player; // set tablerow ID to equal player name
-
-    let newTH = document.createElement('th'); // create header cell
-
-    newTH.id = "player-" + player ; //set id of header cell to player-name
-
-    newTH.textContent = player; // set text content of table header cell to input
-
-    document.getElementById('tableData1Body').appendChild(newTR).appendChild(newTH); // append new tr with child of th to tablebody on document
-
-    document.getElementById('tableData2Body').appendChild(newTR).appendChild(newTH); // same thing just second tableBody
-    
-    //before I added the second one -- will append to the first table -- now only appends to second table
+    return innerHTML;
   }
 
+  function getPlayersHtml() {
+    let innerHTML = ''
+
+    for (let player of Object.values(players)) {
+      const scoresToDisplay = whichTable === 1 ? player.scores.slice(0, 9) : player.scores.slice(9)
+      const outOrInScore = scoresToDisplay.reduce((total, scoreItem) => total + scoreItem, 0);
+  
+      innerHTML += '<tr>';
+  
+      innerHTML += `<th>${player.name}</th>`
+  
+      scoresToDisplay.forEach(scoreItem => {
+        innerHTML += `<th>${scoreItem}</th>`;
+      })
+  
+  
+      innerHTML += `<th>${outOrInScore}</th>`
+      innerHTML += '</tr>'
+    }
+
+    return innerHTML;
+  }
+  
+}
+
+async function renderDropDown() {
+
+  async function renderHtml() {
+    const courses = await getAvailableGolfCourses();
+    const dropdownElement = document.querySelector('#course-select');
+  
+    let innerHTML = '';
+  
+    courses.forEach(({id, name}) => {
+      innerHTML += `<option value=${id}>${name}</option>`
+    })
+  
+    dropdownElement.innerHTML = innerHTML;
+  }
+
+  function bindEventListenerToDropdown() {
+    const dropdownElement = document.querySelector('#course-select');
+  
+    dropdownElement.onchange = function(event) {
+      const selectedCourseId = event.target.value;
+
+      renderGolfScoreCards(selectedCourseId);
+    };
+  }
+
+  await renderHtml();
+  bindEventListenerToDropdown();
+
+}
+
+// Start the App
+function initializeApp() {
+  createNewPlayer('Scott');
+  renderDropDown();
+}
+
+initializeApp();
+
+
+
+
+  
   
