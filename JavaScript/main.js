@@ -138,6 +138,19 @@ function renderTable(whichTable, golfCourseData) {
   
 }
 
+// Supposed to update array of players score per hole one user edits th and inputs their own value -- will verify if it works
+// Add event listener to each editable th
+for (let playerId in players) {
+  let player = players[playerId];
+  for (let i = 0; i < player.scores.length; i++) {
+    document.querySelector(`#tableData${whichTable}Body`).rows[playerId].cells[i+1].addEventListener('input', function(e) {
+      // Update the corresponding score in the player's scores array
+      player.scores[i] = e.target.innerHTML;
+    });
+  }
+}
+//^ Item Above Doesn't work with current setup due to randomly assigned Id's -- this code assumes the id to equal name when it doesn't
+
 async function renderDropDown() {
 
   async function renderHtml() {
