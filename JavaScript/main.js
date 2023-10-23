@@ -46,7 +46,6 @@ function getGolfCourseDetails(golfCourseId) {
 
 // Render Golf Card
 
-
 async function renderGolfScoreCards(golfCourseId) {
   // render the first table
   const golfCourseData = await getGolfCourseDetails(golfCourseId);
@@ -175,9 +174,14 @@ async function renderDropDown() {//renders the drop down to select golf course
 
 }
 
+document.getElementById('buttonPlayer').addEventListener('click', function() {
+  const name = document.getElementById('inputPlayer').value;
+  document.getElementById('confirmation').textContent = 'Player Added! -- ' + name;
+  createNewPlayer(name);
+})
+
 // Start the App
 function initializeApp() {
-  createNewPlayer('Scott');
   renderDropDown();
 }
 
