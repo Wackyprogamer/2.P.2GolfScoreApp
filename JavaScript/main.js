@@ -157,8 +157,14 @@ async function renderDropDown() {//renders the drop down to select golf course
   function bindEventListenerToDropdown() {
     const dropdownElement = document.querySelector('#course-select');
   
+    document.querySelector('#course-select');
+    const headerElement = document.querySelector('#selectedCourse')
+
     dropdownElement.onchange = function(event) {
       const selectedCourseId = event.target.value;
+      const selectedCourseName = event.target.options[event.target.selectedIndex].text;
+
+      headerElement.innerText = `Selected Course: ${selectedCourseName}`;
 
       renderGolfScoreCards(selectedCourseId);
     };
