@@ -177,7 +177,7 @@ async function renderDropDown() {
 
 // Start the App
 function initializeApp() {
-  createNewPlayer('Scott');
+  createNewPlayer('Sergio');
   renderDropDown();
 }
 
