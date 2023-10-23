@@ -18,14 +18,14 @@ class Player {
     this.id = id;
     this.scores = scores;
   }
-}
+} // This will be Player Score
 
 function createNewPlayer(name) {
   const newPlayerId = guidGenerator();
   const newPlayer = new Player(name, newPlayerId);
 
   players[newPlayerId] = newPlayer;
-}
+}// Function to create a new player
 
 // Fetching Stuff from the Internet/REST API
 function getAvailableGolfCourses() {
@@ -85,7 +85,7 @@ function renderTable(whichTable, golfCourseData) {
       return html;
     }
 
-    function getHolesRow() {
+    function getHolesRow() {//get Golf Courses Hole Data from API
       let html  = ''
       let lastCell = whichTable === 1 ? 'Out' : 'In';
       
@@ -139,7 +139,7 @@ function renderTable(whichTable, golfCourseData) {
   
 }
 
-async function renderDropDown() {
+async function renderDropDown() {//renders the drop down to select golf course
 
   async function renderHtml() {
     const courses = await getAvailableGolfCourses();
