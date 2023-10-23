@@ -125,7 +125,7 @@ function renderTable(whichTable, golfCourseData) {
       innerHTML += `<th>${player.name}</th>`
   
       scoresToDisplay.forEach(scoreItem => {
-        innerHTML += `<th>${scoreItem}</th>`;
+        innerHTML += `<th contenteditable='true'>${scoreItem}</th>`;
       })
   
   
