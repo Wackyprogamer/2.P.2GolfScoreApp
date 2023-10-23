@@ -176,6 +176,7 @@ async function renderDropDown() {
 
 document.getElementById('buttonPlayer').addEventListener('click', function() {
   const name = document.getElementById('inputPlayer').value;
+  document.getElementById('confirmation').textContent = 'Player Added! -- ' + name;
   createNewPlayer(name);
 })
 
