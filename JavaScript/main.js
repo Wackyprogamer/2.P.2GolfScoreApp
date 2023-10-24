@@ -64,13 +64,15 @@ function renderTable(whichTable, golfCourseData) {
     function getDataRow(title, key) {
       let html  = ''
       let total = 0;
+      
 
       html += '<tr>';
       html += `<th>${title}</th>`
 
       for(let i  = 0;  i < 9; i++) {
         const holesIndex = whichTable === 1 ? i : i + 9;
-        const cellValue = golfCourseData.holes[holesIndex].teeBoxes[0]?.[key];
+        const cellValue = golfCourseData.holes[holesIndex].teeBoxes[document.getElementById('teebox-select').value]?.[key];
+        
         
         total += cellValue;
         
@@ -125,7 +127,7 @@ function renderTable(whichTable, golfCourseData) {
       innerHTML += `<th>${player.name}</th>`
   
       scoresToDisplay.forEach(scoreItem => {
-        innerHTML += `<th>${scoreItem}</th>`;
+        innerHTML += `<th contenteditable='true'>${scoreItem}</th>`;
       })
   
   
