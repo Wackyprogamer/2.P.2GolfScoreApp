@@ -1,6 +1,8 @@
 // app state
 let players = {};
 let golfCourse;
+let selectedCourseId;
+let teeBoxType;
 // Stuff about Player Data
 function guidGenerator() {
   var S4 = function() {
@@ -52,6 +54,31 @@ async function renderGolfScoreCards(golfCourseId) {
   // render the second table
   renderTable(1, golfCourseData);
   renderTable(2, golfCourseData);
+
+}
+
+function getHoleIndex(whichTable, i) {
+  return whichTable === 1 ? i : i + 9;
+}
+
+function getTotalScore(playerId) {
+  const player = players[playerId];
+  const scores = player.scores;
+
+  const totalScore = scores.reduce((total, scoreItem) => total + scoreItem, 0);
+
+  return totalScore;
+}
+function getScoresToDisplay(whichTable, playerId) {
+  const player = players[playerId];
+  return whichTable === 1 ? player.scores.slice(0, 9) : player.scores.slice(9);
+}
+
+function getOutOrInScore(whichTable, playerId) {
+  const scoresToDisplay =getScoresToDisplay(whichTable, playerId)
+  const outOrInScore = scoresToDisplay.reduce((total, scoreItem) => total + scoreItem, 0);
+
+  return outOrInScore;
 }
 
 function renderTable(whichTable, golfCourseData) {
@@ -70,8 +97,8 @@ function renderTable(whichTable, golfCourseData) {
       html += `<th>${title}</th>`
 
       for(let i  = 0;  i < 9; i++) {
-        const holesIndex = whichTable === 1 ? i : i + 9;
-        const cellValue = golfCourseData.holes[holesIndex].teeBoxes[document.getElementById('teebox-select').value]?.[key];
+        const holesIndex = getHoleIndex(whichTable, i);
+        const cellValue = golfCourseData.holes[holesIndex].teeBoxes[teeBoxType]?.[key];
         
         
         total += cellValue;
@@ -118,40 +145,106 @@ function renderTable(whichTable, golfCourseData) {
   function getPlayersHtml() {
     let innerHTML = ''
 
-    for (let player of Object.values(players)) {
-      const scoresToDisplay = whichTable === 1 ? player.scores.slice(0, 9) : player.scores.slice(9)
-      const outOrInScore = scoresToDisplay.reduce((total, scoreItem) => total + scoreItem, 0);
+    for (let [playerId,player] of Object.entries(players)) {
+      const scoresToDisplay = getScoresToDisplay(whichTable, playerId)
+      const outOrInScore = getOutOrInScore(whichTable, playerId)
   
       innerHTML += '<tr>';
   
       innerHTML += `<th>${player.name}</th>`
   
-      scoresToDisplay.forEach(scoreItem => {
-        innerHTML += `<th contenteditable='true'>${scoreItem}</th>`;
+      scoresToDisplay.forEach((scoreItem, i) => {
+        const holeIndex = getHoleIndex(whichTable, i)
+        innerHTML += `<th data-playerId="${playerId}" data-hole="${holeIndex}">
+          <input value="${scoreItem}" type="number" />
+        </th>`;
       })
   
   
-      innerHTML += `<th>${outOrInScore}</th>`
+      innerHTML += `<th data-playerId="${playerId}" data-total-type="${whichTable}">${outOrInScore}</th>`
       innerHTML += '</tr>'
     }
 
     return innerHTML;
   }
-  
+  bindEventListenerToTableData(whichTable);
+}
+
+
+function renderPlayerTotal(whichTable, playerId) {
+  const element = document.querySelector(`th[data-playerid="${playerId}"][data-total-type="${whichTable}"]`)
+  const outOrInScore = getOutOrInScore(whichTable, playerId);
+
+  element.textContent = outOrInScore;
 }
 
 // Supposed to update array of players score per hole one user edits th and inputs their own value -- will verify if it works
 // Add event listener to each editable th
-for (let playerId in players) {
-  let player = players[playerId];
-  for (let i = 0; i < player.scores.length; i++) {
-    document.querySelector(`#tableData${whichTable}Body`).rows[playerId].cells[i+1].addEventListener('input', function(e) {
-      // Update the corresponding score in the player's scores array
-      player.scores[i] = e.target.innerHTML;
-    });
+function bindEventListenerToTableData (whichTable) {
+  for (let [playerId,player] of Object.entries(players)) {
+    
+    for (let i = 0; i < player.scores.length /2 ; i++) {
+      const holeIndex = getHoleIndex(whichTable, i)
+      const query = `#tableData${whichTable}Body th[data-playerId="${playerId}"][data-hole="${holeIndex}"] input`
+      const cellElement = document.querySelector(query)
+
+      cellElement.addEventListener('change', function(e) {
+        e.preventDefault();
+        //Update the corresponding score in the player's scores array
+        player.scores[holeIndex] = Number(e.target.value);
+        renderPlayerTotal(whichTable, playerId);
+        // update the in and out scores
+      });
+      
+    }
   }
-}
+} 
 //^ Item Above Doesn't work with current setup due to randomly assigned Id's -- this code assumes the id to equal name when it doesn't
+function bindClickToButtonPlayer() {
+  document.getElementById('buttonPlayer').addEventListener('click', function() {
+    const name = document.getElementById('inputPlayer').value;
+    document.getElementById('confirmation').textContent = 'Player Added! -- ' + name;
+    createNewPlayer(name);
+    showFirstTable();
+    renderGolfScoreCards(selectedCourseId);
+  })
+}
+
+function showTeeBoxSelect() {
+  const element = document.querySelector('#teebox-select').parentElement;
+
+  element.setAttribute('style', '')
+}
+
+function showPlayerCreator() {
+  const element = document.querySelector('#userSection');
+
+  element.setAttribute('style', '');
+}
+
+function showFirstTable() {
+  const element = document.querySelector('#firstTable');
+
+  element.setAttribute('style', '')
+}
+
+function hideTeeBoxSelect() {
+  const element = document.querySelector('#teebox-select').parentElement;
+
+  element.setAttribute('style', 'display:none')
+}
+
+function hidePlayerCreator() {
+  const element = document.querySelector('#userSection');
+
+  element.setAttribute('style', 'display:none')
+}
+
+function hideFirstTable() {
+  const element = document.querySelector('#firstTable');
+
+  element.setAttribute('style', 'display:none')
+}
 
 async function renderDropDown() {
 
@@ -168,32 +261,46 @@ async function renderDropDown() {
     dropdownElement.innerHTML = innerHTML;
   }
 
-  function bindEventListenerToDropdown() {
+  function bindEventListenerToCourseSelector() {
     const dropdownElement = document.querySelector('#course-select');
   
     document.querySelector('#course-select');
     const headerElement = document.querySelector('#selectedCourse')
 
     dropdownElement.onchange = function(event) {
-      const selectedCourseId = event.target.value;
+
       const selectedCourseName = event.target.options[event.target.selectedIndex].text;
+      selectedCourseId = event.target.value;
+
 
       headerElement.innerText = `Selected Course: ${selectedCourseName}`;
 
-      renderGolfScoreCards(selectedCourseId);
+      players = {};
+      hidePlayerCreator();
+      hideFirstTable();
+      showTeeBoxSelect();
+
     };
   }
 
+  function bindEventListenerToTeeboxSelector() {
+    const teeboxSelector = document.querySelector('#teebox-select');
+
+    teeboxSelector.onchange = function(e) {
+
+      players = {};
+      teeBoxType = e.target.value;
+      hideFirstTable();
+      showPlayerCreator();
+    }
+  }
+
   await renderHtml();
-  bindEventListenerToDropdown();
+  bindEventListenerToCourseSelector();
+  bindEventListenerToTeeboxSelector();
+  bindClickToButtonPlayer();
 
 }
-
-document.getElementById('buttonPlayer').addEventListener('click', function() {
-  const name = document.getElementById('inputPlayer').value;
-  document.getElementById('confirmation').textContent = 'Player Added! -- ' + name;
-  createNewPlayer(name);
-})
 
 // Start the App
 function initializeApp() {

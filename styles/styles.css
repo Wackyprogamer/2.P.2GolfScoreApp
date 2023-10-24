@@ -53,6 +53,9 @@ label {
   border-color: black;
   background-color: lightgray;
 }
+#firstTable tr input, #secondTable tr input {
+  width: 100%;
+}
 
 #firstTable th, #secondTable th {
   background-color: white;
