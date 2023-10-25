@@ -80,7 +80,8 @@ function getOutOrInScore(whichTable, playerId) {
 
   return outOrInScore;
 }
-
+////
+////
 //// Attempt for final scores
 function totalOverall() {
   const tBody = document.querySelector(`#endGameTotalbody`);
@@ -118,6 +119,8 @@ function totalOverall() {
   
 }
 ////// This is my Item to attempt to add score Table
+//////
+/////
 
 function renderTable(whichTable, golfCourseData) {
   const tBody = document.querySelector(`#tableData${whichTable}Body`);
@@ -361,6 +364,21 @@ function initializeApp() {
 }
 
 initializeApp();
+
+let test = messageUser();
+
+function messageUser () {
+
+let user = document.querySelector('[data-total-type]').textContent;
+
+let user2 = document.querySelector('[data-total-type]').parentElement.firstElementChild;
+
+if (user > 0) {
+
+  window.alert(`congratulations ${user2}, you are (L)PGA Tour material!`);
+}
+
+}
 
 
 
