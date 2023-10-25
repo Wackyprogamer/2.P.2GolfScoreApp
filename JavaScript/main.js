@@ -364,3 +364,26 @@ function initializeApp() {
 }
 
 initializeApp();  
+
+
+
+
+
+$(function() {
+
+  let thElement = document.querySelector('th[data-hole="17"]');
+  let inputValue = 0;
+
+  if (thElement) {
+      let inputElement = thElement.querySelector('input');
+      if (inputElement) {
+          inputValue < inputElement.value;
+          return toastr.success("Test Worked");
+      }
+  }
+});
+
+
+$(function() {
+  toastr.success("Test Worked");
+});
