@@ -170,7 +170,7 @@ function renderTable(whichTable, golfCourseData) {
   bindEventListenerToTableData(whichTable);
 }
 
-
+// Item to get total score for player for that table
 function renderPlayerTotal(whichTable, playerId) {
   const element = document.querySelector(`th[data-playerid="${playerId}"][data-total-type="${whichTable}"]`)
   const outOrInScore = getOutOrInScore(whichTable, playerId);
@@ -206,6 +206,7 @@ function bindClickToButtonPlayer() {
     document.getElementById('confirmation').textContent = 'Player Added! -- ' + name;
     createNewPlayer(name);
     showFirstTable();
+    showTableScores();
     renderGolfScoreCards(selectedCourseId);
   })
 }
@@ -228,6 +229,12 @@ function showFirstTable() {
   element.setAttribute('style', '')
 }
 
+function showTableScores() {
+  const element = document.querySelector('#secondTableScores')
+
+  element.setAttribute('style', '');
+}
+
 function hideTeeBoxSelect() {
   const element = document.querySelector('#teebox-select').parentElement;
 
@@ -244,6 +251,12 @@ function hideFirstTable() {
   const element = document.querySelector('#firstTable');
 
   element.setAttribute('style', 'display:none')
+}
+
+function hideTableScores() {
+  const element = document.querySelector('#secondTableScores')
+
+  element.setAttribute('style', 'display: none');
 }
 
 async function renderDropDown() {
@@ -278,6 +291,7 @@ async function renderDropDown() {
       players = {};
       hidePlayerCreator();
       hideFirstTable();
+      hideTableScores();
       showTeeBoxSelect();
 
     };
@@ -291,6 +305,7 @@ async function renderDropDown() {
       players = {};
       teeBoxType = e.target.value;
       hideFirstTable();
+      hideTableScores();
       showPlayerCreator();
     }
   }
