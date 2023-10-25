@@ -81,6 +81,44 @@ function getOutOrInScore(whichTable, playerId) {
   return outOrInScore;
 }
 
+//// Attempt for final scores
+function totalOverall() {
+  const tBody = document.querySelector(`#endGameTotalbody`);
+  tBody.innerHTML = '';
+  tBody.innerHTML += getTopPieceHtml2();
+  tBody.innerHTML += getPlayersHtml2();
+  
+  function getTopPieceHtml2() {
+    let innerHTML = '';
+
+    innerHTML += '<tr>';
+
+    innerHTML += '<th>Total Score</th>'
+
+    innerHTML += '<th>Strokes</th>'
+
+    innerHTML += '</tr>'
+
+  }
+
+  function getPlayersHtml2() {
+    let innerHTML = ''
+
+    for (let [playerId,player] of Object.entries(players)) {
+      
+      innerHTML += '<tr>';
+  
+      innerHTML += `<th data-playerId="${playerId}">${player.name}</th>`
+  
+      innerHTML += '</tr>'
+    }
+
+    return innerHTML;
+  }
+  
+}
+////// This is my Item to attempt to add score Table
+
 function renderTable(whichTable, golfCourseData) {
   const tBody = document.querySelector(`#tableData${whichTable}Body`);
   tBody.innerHTML = '';
