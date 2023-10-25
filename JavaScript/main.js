@@ -363,25 +363,4 @@ function initializeApp() {
   renderDropDown();
 }
 
-initializeApp();
-
-let test = messageUser();
-
-function messageUser () {
-
-let user = document.querySelector('[data-total-type]').textContent;
-
-let user2 = document.querySelector('[data-total-type]').parentElement.firstElementChild;
-
-if (user > 0) {
-
-  window.alert(`congratulations ${user2}, you are (L)PGA Tour material!`);
-}
-
-}
-
-
-
-
-  
-  
+initializeApp();  
