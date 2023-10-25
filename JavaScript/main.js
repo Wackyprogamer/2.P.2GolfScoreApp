@@ -387,3 +387,7 @@ $(function() {
 $(function() {
   toastr.success("Test Worked");
 });
+
+$(function() {
+  toastr.success(`Congrats! You are (L)PGA Tour material`);
+});
