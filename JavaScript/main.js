@@ -240,7 +240,7 @@ function bindEventListenerToTableData (whichTable) {
     }
   }
 } 
-//^ Item Above Doesn't work with current setup due to randomly assigned Id's -- this code assumes the id to equal name when it doesn't
+
 function bindClickToButtonPlayer() {
   document.getElementById('buttonPlayer').addEventListener('click', function() {
     const name = document.getElementById('inputPlayer').value;
@@ -369,25 +369,43 @@ initializeApp();
 
 
 
-$(function() {
+//$(function() {
 
-  let thElement = document.querySelector('th[data-hole="17"]');
-  let inputValue = 0;
+  //let thElement = document.querySelector('th[data-hole="17"]');
+  //let inputValue = 0;
 
-  if (thElement) {
-      let inputElement = thElement.querySelector('input');
-      if (inputElement) {
-          inputValue < inputElement.value;
-          return toastr.success("Test Worked");
-      }
+  //if (thElement) {
+      //let inputElement = thElement.querySelector('input');
+      //if (inputElement) {
+          //i//nputValue < inputElement.value;
+          //return toastr.success("Test Worked");
+      //}
+  //}
+//});
+
+
+$(document).ready(function() {
+
+  $('th[data-hole="17"] input').change(function() {
+    let score = $(this).val();
+    if(score > 0) {
+    toastr.success('Congrats! You are (L)PGA Tour material');
+    }
+  });
+});
+
+//$(function() {
+  //toastr.success(`Congrats! You are (L)PGA Tour material`);
+//});
+
+//I know this works -- so atleast toastr and the linked sheets are working
+
+$(document).ready(function() {
+
+  let score =  $('th[data-type-total="2"]').value;
+
+  if (score > 0) {
+    toastr.success('Congrats! You are (L)PGA Tour material')
   }
-});
 
-
-$(function() {
-  toastr.success("Test Worked");
-});
-
-$(function() {
-  toastr.success(`Congrats! You are (L)PGA Tour material`);
 });
