@@ -80,47 +80,6 @@ function getOutOrInScore(whichTable, playerId) {
 
   return outOrInScore;
 }
-////
-////
-//// Attempt for final scores
-function totalOverall() {
-  const tBody = document.querySelector(`#endGameTotalbody`);
-  tBody.innerHTML = '';
-  tBody.innerHTML += getTopPieceHtml2();
-  tBody.innerHTML += getPlayersHtml2();
-  
-  function getTopPieceHtml2() {
-    let innerHTML = '';
-
-    innerHTML += '<tr>';
-
-    innerHTML += '<th>Total Score</th>'
-
-    innerHTML += '<th>Strokes</th>'
-
-    innerHTML += '</tr>'
-
-  }
-
-  function getPlayersHtml2() {
-    let innerHTML = ''
-
-    for (let [playerId,player] of Object.entries(players)) {
-      
-      innerHTML += '<tr>';
-  
-      innerHTML += `<th data-playerId="${playerId}">${player.name}</th>`
-  
-      innerHTML += '</tr>'
-    }
-
-    return innerHTML;
-  }
-  
-}
-////// This is my Item to attempt to add score Table
-//////
-/////
 
 function renderTable(whichTable, golfCourseData) {
   const tBody = document.querySelector(`#tableData${whichTable}Body`);
@@ -183,6 +142,40 @@ function renderTable(whichTable, golfCourseData) {
     return innerHTML;
   }
 
+
+  /// Extra Added Function of mine that could replace the original playersHTML
+  function getPlayersHtml(whichTable) {
+    let innerHTML = ''
+  
+    for (let [playerId,player] of Object.entries(players)) {
+      const scoresToDisplay = getScoresToDisplay(whichTable, playerId)
+      const outOrInScore = getOutOrInScore(whichTable, playerId)
+  
+      innerHTML += '<tr>';
+  
+      innerHTML += `<th>${player.name}</th>`
+  
+      scoresToDisplay.forEach((scoreItem, i) => {
+        const holeIndex = getHoleIndex(whichTable, i)
+        innerHTML += `<th data-playerId="${playerId}" data-hole="${holeIndex}">
+          <input value="${scoreItem}" type="number" />
+        </th>`;
+      })
+  
+      innerHTML += `<th data-playerId="${playerId}" data-total-type="${whichTable}">${outOrInScore}</th>`
+  
+      // Add total score cell only for the second table
+      if (whichTable === 2) {
+        const totalScore = getTotalScore(playerId);
+        innerHTML += `<th data-playerId="${playerId}" data-total-type="total">${totalScore}</th>`
+      }
+  
+      innerHTML += '</tr>'
+    }
+  
+    return innerHTML;
+  }
+
   function getPlayersHtml() {
     let innerHTML = ''
 
@@ -235,6 +228,16 @@ function bindEventListenerToTableData (whichTable) {
         player.scores[holeIndex] = Number(e.target.value);
         renderPlayerTotal(whichTable, playerId);
         // update the in and out scores
+
+
+        //This line of code here checks if holeIndex thats selected is equal to index 17
+        if (holeIndex === 17) {
+          //if it is then total score equals get total score of player
+          const totalScore = getTotalScore(playerId);
+          if (totalScore > 0) { // checks if total score is greater than 0
+            toastr.success(`Congrats ${player.name}! Your total score is ${totalScore}. You are (L)PGA Tour material`); // sends a toast message to tell the user congrats for finishing the game and tells them their score as well
+          }
+        }
       });
       
     }
@@ -364,48 +367,3 @@ function initializeApp() {
 }
 
 initializeApp();  
-
-
-
-
-
-//$(function() {
-
-  //let thElement = document.querySelector('th[data-hole="17"]');
-  //let inputValue = 0;
-
-  //if (thElement) {
-      //let inputElement = thElement.querySelector('input');
-      //if (inputElement) {
-          //i//nputValue < inputElement.value;
-          //return toastr.success("Test Worked");
-      //}
-  //}
-//});
-
-
-$(document).ready(function() {
-
-  $('th[data-hole="17"] input').change(function() {
-    let score = $(this).val();
-    if(score > 0) {
-    toastr.success('Congrats! You are (L)PGA Tour material');
-    }
-  });
-});
-
-//$(function() {
-  //toastr.success(`Congrats! You are (L)PGA Tour material`);
-//});
-
-//I know this works -- so atleast toastr and the linked sheets are working
-
-$(document).ready(function() {
-
-  let score =  $('th[data-type-total="2"]').value;
-
-  if (score > 0) {
-    toastr.success('Congrats! You are (L)PGA Tour material')
-  }
-
-});
