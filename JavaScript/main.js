@@ -115,18 +115,20 @@ function renderTable(whichTable, golfCourseData) {
 
     function getHolesRow() {//get Golf Courses Hole Data from API
       let html  = ''
-      let lastCell = whichTable === 1 ? 'Out' : 'In';
-      
+      let outOrIn = whichTable === 1 ? 'Out' : 'In';
+      let isShowTotal = whichTable === 2;
+
       html += '<tr>';
-      html += `<th>Holes</th>`
+      html += `<th scope="col">Holes</th>`
 
       for(let i  = 0; i < 9; i++) {
         const displayHole = whichTable === 1 ? `0${i + 1}`: i + 10 ;
-        html += `<th>${displayHole}</th>`;
+        html += `<th scope="col">${displayHole}</th>`;
       }
       
 
-      html += `<th>${lastCell}</th>`
+      html += isShowTotal ?  `<th scope="col">${outOrIn}</th>` : `<th scope="col">${outOrIn}</th><th scope="col" style="color: white;">Total Score</th>`
+      html += isShowTotal ? `<th scope="col">Total Score</th>` : '';
       html += '</tr>';
 
       return html;
@@ -144,12 +146,13 @@ function renderTable(whichTable, golfCourseData) {
 
 
   /// Extra Added Function of mine that could replace the original playersHTML
-  function getPlayersHtml(whichTable) {
+  function getPlayersHtml() {
     let innerHTML = ''
   
     for (let [playerId,player] of Object.entries(players)) {
       const scoresToDisplay = getScoresToDisplay(whichTable, playerId)
       const outOrInScore = getOutOrInScore(whichTable, playerId)
+      let isShowTotal = whichTable === 2;
   
       innerHTML += '<tr>';
   
@@ -157,7 +160,7 @@ function renderTable(whichTable, golfCourseData) {
   
       scoresToDisplay.forEach((scoreItem, i) => {
         const holeIndex = getHoleIndex(whichTable, i)
-        innerHTML += `<th data-playerId="${playerId}" data-hole="${holeIndex}">
+        innerHTML += `<th data-playerId="${playerId}" data-hole="${holeIndex}" scope="col">
           <input value="${scoreItem}" type="number" />
         </th>`;
       })
@@ -165,7 +168,7 @@ function renderTable(whichTable, golfCourseData) {
       innerHTML += `<th data-playerId="${playerId}" data-total-type="${whichTable}">${outOrInScore}</th>`
   
       // Add total score cell only for the second table
-      if (whichTable === 2) {
+      if (isShowTotal) {
         const totalScore = getTotalScore(playerId);
         innerHTML += `<th data-playerId="${playerId}" data-total-type="total">${totalScore}</th>`
       }
@@ -176,40 +179,22 @@ function renderTable(whichTable, golfCourseData) {
     return innerHTML;
   }
 
-  function getPlayersHtml() {
-    let innerHTML = ''
-
-    for (let [playerId,player] of Object.entries(players)) {
-      const scoresToDisplay = getScoresToDisplay(whichTable, playerId)
-      const outOrInScore = getOutOrInScore(whichTable, playerId)
-  
-      innerHTML += '<tr>';
-  
-      innerHTML += `<th>${player.name}</th>`
-  
-      scoresToDisplay.forEach((scoreItem, i) => {
-        const holeIndex = getHoleIndex(whichTable, i)
-        innerHTML += `<th data-playerId="${playerId}" data-hole="${holeIndex}">
-          <input value="${scoreItem}" type="number" />
-        </th>`;
-      })
-  
-  
-      innerHTML += `<th data-playerId="${playerId}" data-total-type="${whichTable}">${outOrInScore}</th>`
-      innerHTML += '</tr>'
-    }
-
-    return innerHTML;
-  }
   bindEventListenerToTableData(whichTable);
 }
 
 // Item to get total score for player for that table
-function renderPlayerTotal(whichTable, playerId) {
+function renderPlayerTotalOutOrIn(whichTable, playerId) {
   const element = document.querySelector(`th[data-playerid="${playerId}"][data-total-type="${whichTable}"]`)
   const outOrInScore = getOutOrInScore(whichTable, playerId);
 
   element.textContent = outOrInScore;
+}
+
+function renderPlayTotal(playerId) {
+  const element = document.querySelector(`th[data-playerid="${playerId}"][data-total-type="total"]`)
+  const totalScore = getTotalScore(playerId);
+
+  element.textContent = totalScore;  
 }
 
 // Supposed to update array of players score per hole one user edits th and inputs their own value -- will verify if it works
@@ -226,17 +211,16 @@ function bindEventListenerToTableData (whichTable) {
         e.preventDefault();
         //Update the corresponding score in the player's scores array
         player.scores[holeIndex] = Number(e.target.value);
-        renderPlayerTotal(whichTable, playerId);
+        renderPlayerTotalOutOrIn(whichTable, playerId);
+        renderPlayTotal(playerId);
         // update the in and out scores
 
 
         //This line of code here checks if holeIndex thats selected is equal to index 17
-        if (holeIndex === 17) {
+        if (isPlayerFinshed(playerId)) {
           //if it is then total score equals get total score of player
           const totalScore = getTotalScore(playerId);
-          if (totalScore > 0) { // checks if total score is greater than 0
-            toastr.success(`Congrats ${player.name}! Your total score is ${totalScore}. You are (L)PGA Tour material`); // sends a toast message to tell the user congrats for finishing the game and tells them their score as well
-          }
+          toastr.success(`Congrats ${player.name}! Your total score is ${totalScore}. You are (L)PGA Tour material`); // sends a toast message to tell the user congrats for finishing the game and tells them their score as well
         }
       });
       
@@ -244,13 +228,21 @@ function bindEventListenerToTableData (whichTable) {
   }
 } 
 
+function isPlayerFinshed(playerId) {
+  const player = players[playerId];
+  const scores = player.scores;
+  const hasNoZeros = scores.every(scoreItem => scoreItem > 0);
+
+  return hasNoZeros;
+}
+
+
 function bindClickToButtonPlayer() {
   document.getElementById('buttonPlayer').addEventListener('click', function() {
     const name = document.getElementById('inputPlayer').value;
     document.getElementById('confirmation').textContent = 'Player Added! -- ' + name;
     createNewPlayer(name);
     showFirstTable();
-    showTableScores();
     renderGolfScoreCards(selectedCourseId);
   })
 }
@@ -273,12 +265,6 @@ function showFirstTable() {
   element.setAttribute('style', '')
 }
 
-function showTableScores() {
-  const element = document.querySelector('#secondTableScores')
-
-  element.setAttribute('style', '');
-}
-
 function hideTeeBoxSelect() {
   const element = document.querySelector('#teebox-select').parentElement;
 
@@ -295,12 +281,6 @@ function hideFirstTable() {
   const element = document.querySelector('#firstTable');
 
   element.setAttribute('style', 'display:none')
-}
-
-function hideTableScores() {
-  const element = document.querySelector('#secondTableScores')
-
-  element.setAttribute('style', 'display: none');
 }
 
 async function renderDropDown() {
@@ -335,7 +315,6 @@ async function renderDropDown() {
       players = {};
       hidePlayerCreator();
       hideFirstTable();
-      hideTableScores();
       showTeeBoxSelect();
 
     };
@@ -349,7 +328,6 @@ async function renderDropDown() {
       players = {};
       teeBoxType = e.target.value;
       hideFirstTable();
-      hideTableScores();
       showPlayerCreator();
     }
   }
